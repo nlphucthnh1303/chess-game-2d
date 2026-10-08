@@ -7,6 +7,8 @@ using System.Windows.Media;
 using ChessEngine.Engine;
 using ChessEngine.Models;
 using ChessEngine.Enums;
+using ChessUI.Helpers;
+using System.Windows.Media.Imaging;
 
 namespace ChessUI;
 
@@ -36,6 +38,9 @@ public partial class MainWindow : Window
     /// </summary>
     private readonly Button[,] _squareButtons = new Button[8, 8];
 
+    private readonly Brush _lightSquareBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F0D9B5"));
+    private readonly Brush _darkSquareBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B58863"));
+
     public MainWindow()
     {
         InitializeComponent();
@@ -49,6 +54,7 @@ public partial class MainWindow : Window
 
         // Khởi tạo lưới 64 ô cờ giao diện
         InitializeBoardUI();
+        BtnNewGame_Click(this, new RoutedEventArgs());
     }
 
     /// <summary>
@@ -57,14 +63,32 @@ public partial class MainWindow : Window
     /// </summary>
     private void InitializeBoardUI()
     {
-        // TODO: [Bước 1] Xóa sạch các child element trong BoardUniformGrid.Children.
-        // TODO: [Bước 2] Lặp qua 8 hàng (row 0..7) và 8 cột (col 0..7):
-        //       - Tạo một Button đại diện cho ô cờ.
-        //       - Xác định màu ô cờ: if ((row + col) % 2 == 0) màu sáng, ngược lại màu tối.
-        //       - Lưu Button vào mảng _squareButtons[row, col].
-        //       - Đăng ký sự kiện button.Click += SquareButton_Click với Tag chứa vị trí Position(row, col).
-        //       - Thêm button vào BoardUniformGrid.Children.
-        throw new NotImplementedException();
+        BoardUniformGrid.Children.Clear();
+
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                Button btn = new Button();
+                btn.Background = (row + col) % 2 == 0 ? _lightSquareBrush : _darkSquareBrush;
+                btn.BorderThickness = new Thickness(0);
+                btn.Tag = new Position(row, col);
+                btn.Click += SquareButton_Click;
+
+                // Add style so it doesnt look like a default button
+                if (Application.Current.Resources.Contains("ChessSquareStyle"))
+                {
+                    btn.Style = (Style)Application.Current.Resources["ChessSquareStyle"];
+                }
+                else
+                {
+                    btn.Style = (Style)FindResource(ToolBar.ButtonStyleKey);
+                }
+
+                _squareButtons[row, col] = btn;
+                BoardUniformGrid.Children.Add(btn);
+            }
+        }
     }
 
     /// <summary>
@@ -72,12 +96,32 @@ public partial class MainWindow : Window
     /// </summary>
     private void RenderBoard()
     {
-        // TODO: [Bước 1] Duyệt r từ 0..7 và c từ 0..7.
-        // TODO: [Bước 2] Lấy quân cờ tại ô (r, c) từ _gameManager.Board[r, c].
-        // TODO: [Bước 3] Nếu ô trống -> Gán Content của _squareButtons[r, c] = null.
-        // TODO: [Bước 4] Nếu ô có quân cờ -> Dùng ChessImageHelper.GetPieceImagePath() để nạp hình ảnh và hiển thị lên Content của Button.
-        // TODO: [Bước 5] Đặt lại màu nền gốc của ô cờ (xóa các màu highlight trước đó).
-        throw new NotImplementedException();
+        for (int r = 0; r < 8; r++)
+        {
+            for (int c = 0; c < 8; c++)
+            {
+                var piece = _gameManager.Board[r, c];
+                Button btn = _squareButtons[r, c];
+
+                // Reset background color
+                btn.Background = (r + c) % 2 == 0 ? _lightSquareBrush : _darkSquareBrush;
+
+                if (piece == null)
+                {
+                    btn.Content = null;
+                }
+                else
+                {
+                    string imagePath = ChessImageHelper.GetPieceImagePath(piece.Color, piece.Type);
+                    Image img = new Image
+                    {
+                        Source = new BitmapImage(new Uri(imagePath)),
+                        Margin = new Thickness(5)
+                    };
+                    btn.Content = img;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -86,19 +130,52 @@ public partial class MainWindow : Window
     /// </summary>
     private void SquareButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: [Bước 1] Lấy vị trí ô cờ click (clickedPos) từ Tag của Button gửi tới.
-        // TODO: [Bước 2] Nếu chưa chọn ô nào (_selectedPosition == null):
-        //       - Lấy quân cờ tại clickedPos. Nếu là quân thuộc lượt đi hiện tại (_gameManager.CurrentTurn):
-        //           + Gán _selectedPosition = clickedPos.
-        //           + Lấy danh sách nước đi hợp lệ: _activeLegalMoves = _gameManager.GetLegalMoves(clickedPos).ToList().
-        //           + Highlight ô đang chọn và các ô đích khả thi (HighlightLegalMoves()).
-        // TODO: [Bước 3] Nếu ĐÃ chọn ô trước đó (_selectedPosition != null):
-        //       - Tìm xem clickedPos có nằm trong danh sách _activeLegalMoves hay không.
-        //       - Nếu CÓ -> Thực hiện nước đi: _gameManager.MakeMove(targetMove), sau đó reset _selectedPosition = null.
-        //       - Nếu KHÔNG -> Kiểm tra xem clickedPos có phải là một quân cờ khác phe mình không.
-        //           + Nếu đúng -> Chuyển ô chọn mới sang clickedPos và highlight lại.
-        //           + Nếu sai -> Bỏ chọn (_selectedPosition = null) và reset màu bàn cờ.
-        throw new NotImplementedException();
+        if (sender is not Button btn || btn.Tag is not Position clickedPos)
+            return;
+
+        if (_selectedPosition == null)
+        {
+            var piece = _gameManager.Board.GetPiece(clickedPos);
+            if (piece != null && piece.Color == _gameManager.CurrentTurn)
+            {
+                _selectedPosition = clickedPos;
+                _activeLegalMoves = _gameManager.GetLegalMoves(clickedPos).ToList();
+                HighlightLegalMoves();
+            }
+        }
+        else
+        {
+            Move? targetMove = _activeLegalMoves.FirstOrDefault(m => m.EndPosition == clickedPos);
+            if (targetMove != null)
+            {
+                if (targetMove.Type == MoveType.Promotion)
+                {
+                    // In a real app we'd ask the user, but for now just auto-queen
+                    targetMove = new Move(targetMove.StartPosition, targetMove.EndPosition, MoveType.Promotion, PieceType.Queen);
+                }
+
+                _gameManager.MakeMove(targetMove);
+                _selectedPosition = null;
+                _activeLegalMoves.Clear();
+            }
+            else
+            {
+                var piece = _gameManager.Board.GetPiece(clickedPos);
+                if (piece != null && piece.Color == _gameManager.CurrentTurn)
+                {
+                    RenderBoard(); // reset highlights
+                    _selectedPosition = clickedPos;
+                    _activeLegalMoves = _gameManager.GetLegalMoves(clickedPos).ToList();
+                    HighlightLegalMoves();
+                }
+                else
+                {
+                    _selectedPosition = null;
+                    _activeLegalMoves.Clear();
+                    RenderBoard();
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -106,9 +183,15 @@ public partial class MainWindow : Window
     /// </summary>
     private void HighlightLegalMoves()
     {
-        // TODO: [Bước 1] Đổi màu nền của Button tại ô _selectedPosition (Ví dụ: màu Vàng/Xanh lá mạ).
-        // TODO: [Bước 2] Với mỗi move trong _activeLegalMoves -> Đổi màu nền ô EndPosition (Ví dụ: Chấm tròn gợi ý hoặc viền xanh).
-        throw new NotImplementedException();
+        if (_selectedPosition.HasValue)
+        {
+            _squareButtons[_selectedPosition.Value.Row, _selectedPosition.Value.Column].Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F6F669"));
+        }
+
+        foreach (var move in _activeLegalMoves)
+        {
+            _squareButtons[move.EndPosition.Row, move.EndPosition.Column].Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9CA43"));
+        }
     }
 
     /// <summary>
@@ -117,10 +200,12 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnMoveExecuted(object? sender, MoveExecutedEventArgs e)
     {
-        // TODO: [Bước 1] Gọi RenderBoard() để vẽ lại vị trí các quân cờ mới.
-        // TODO: [Bước 2] Thêm chuỗi mô tả e.ExecutedMove.ToString() vào ListBox LstMoveHistory.
-        // TODO: [Bước 3] Cập nhật TxtCurrentTurn.Text = _gameManager.CurrentTurn == White ? "Trắng (White)" : "Đen (Black)".
-        throw new NotImplementedException();
+        RenderBoard();
+        LstMoveHistory.Items.Add(e.ExecutedMove.ToString());
+        LstMoveHistory.ScrollIntoView(LstMoveHistory.Items[LstMoveHistory.Items.Count - 1]);
+
+        TxtCurrentTurn.Text = _gameManager.CurrentTurn == ChessColor.White ? "Trắng (White)" : "Đen (Black)";
+        TxtCurrentTurn.Foreground = _gameManager.CurrentTurn == ChessColor.White ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EDF2F4")) : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8D99AE"));
     }
 
     /// <summary>
@@ -128,9 +213,17 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnGameStateChanged(object? sender, GameStateChangedEventArgs e)
     {
-        // TODO: [Bước 1] Cập nhật TxtGameState.Text hiển thị trạng thái mới.
-        // TODO: [Bước 2] Nếu state == Checkmate hoặc Stalemate -> Hiển thị MessageBox thông báo người thắng/kết quả ván cờ.
-        throw new NotImplementedException();
+        TxtGameState.Text = e.NewState.ToString();
+
+        if (e.NewState == GameState.Checkmate)
+        {
+            string winner = _gameManager.CurrentTurn == ChessColor.White ? "Đen (Black)" : "Trắng (White)";
+            MessageBox.Show($"Chiếu bí! {winner} giành chiến thắng.", "Kết thúc ván đấu", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        else if (e.NewState == GameState.Stalemate || e.NewState == GameState.DrawByInsufficientMaterial || e.NewState == GameState.DrawByRule)
+        {
+            MessageBox.Show("Hòa cờ!", "Kết thúc ván đấu", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     /// <summary>
@@ -138,10 +231,14 @@ public partial class MainWindow : Window
     /// </summary>
     private void BtnNewGame_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: [Bước 1] Gọi _gameManager.StartNewGame().
-        // TODO: [Bước 2] Gọi LstMoveHistory.Items.Clear().
-        // TODO: [Bước 3] Gọi RenderBoard().
-        throw new NotImplementedException();
+        _gameManager.StartNewGame();
+        LstMoveHistory.Items.Clear();
+        _selectedPosition = null;
+        _activeLegalMoves.Clear();
+        TxtCurrentTurn.Text = "Trắng (White)";
+        TxtCurrentTurn.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EDF2F4"));
+        TxtGameState.Text = "Đang diễn ra";
+        RenderBoard();
     }
 
     /// <summary>
@@ -149,8 +246,6 @@ public partial class MainWindow : Window
     /// </summary>
     private void BtnUndoMove_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: [Bước 1] Gọi thuật toán Undo trong GameManager (nếu có triển khai).
-        // TODO: [Bước 2] Cập nhật lại UI.
-        throw new NotImplementedException();
+        MessageBox.Show("Tính năng hoàn nước đi chưa được triển khai.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 }
