@@ -149,8 +149,29 @@ public partial class MainWindow : Window
     /// </summary>
     private void BtnUndoMove_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: [Bước 1] Gọi thuật toán Undo trong GameManager (nếu có triển khai).
-        // TODO: [Bước 2] Cập nhật lại UI.
-        throw new NotImplementedException();
+        // [Bước 1] Gọi thuật toán Undo trong GameManager
+        _gameManager.UndoMove();
+
+        // [Bước 2] Cập nhật lại UI.
+        _selectedPosition = null;
+        _activeLegalMoves.Clear();
+        RenderBoard();
+
+        if (LstMoveHistory.Items.Count > 0)
+        {
+            LstMoveHistory.Items.RemoveAt(LstMoveHistory.Items.Count - 1);
+        }
+
+        TxtCurrentTurn.Text = _gameManager.CurrentTurn == ChessColor.White ? "Trắng (White)" : "Đen (Black)";
+        TxtGameState.Text = _gameManager.Status switch
+        {
+            GameState.Active => "Đang diễn ra",
+            GameState.Check => "Đang bị chiếu",
+            GameState.Checkmate => "Chiếu bí",
+            GameState.Stalemate => "Hòa bế tắc",
+            GameState.DrawByInsufficientMaterial => "Hòa cờ",
+            GameState.DrawByRule => "Hòa cờ",
+            _ => "Chưa xác định"
+        };
     }
 }

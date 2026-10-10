@@ -159,6 +159,14 @@ public class GameManager
         // TODO: Trả về phần tử cuối trong MoveHistory hoặc null nếu chưa có nước đi nào.
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Hoàn lại nước đi gần nhất.
+    /// </summary>
+    public void UndoMove()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 /// <summary>
