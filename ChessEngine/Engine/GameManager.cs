@@ -139,16 +139,53 @@ public class GameManager
     /// </summary>
     private void UpdateGameState()
     {
-        // TODO: [Bước 1] Kiểm tra xem phe hiện tại (CurrentTurn) có còn NƯỚC ĐI HỢP LỆ nào không:
-        //       - Duyệt tất cả các quân cờ của CurrentTurn, nếu có ít nhất 1 quân có GetLegalMoves().Any() -> Còn nước đi.
-        // TODO: [Bước 2] Nếu KHÔNG còn nước đi hợp lệ nào:
-        //       - Nếu IsKingInCheck(CurrentTurn) == true -> Status = GameState.Checkmate (Chiếu bí - Thua).
-        //       - Nếu IsKingInCheck(CurrentTurn) == false -> Status = GameState.Stalemate (Hòa bế tắc).
-        // TODO: [Bước 3] Nếu CÒN nước đi hợp lệ:
-        //       - Nếu IsKingInCheck(CurrentTurn) == true -> Status = GameState.Check (Đang bị chiếu).
-        //       - Ngược lại -> Status = GameState.Active.
-        // TODO: [Bước 4] Nếu Status thay đổi, kích hoạt sự kiện GameStateChanged?.Invoke(this, new GameStateChangedEventArgs(Status)).
-        throw new NotImplementedException();
+        bool hasLegalMoves = false;
+        for (int r = 0; r < 8; r++)
+        {
+            for (int c = 0; c < 8; c++)
+            {
+                Piece? piece = Board[r, c];
+                if (piece != null && piece.Color == CurrentTurn)
+                {
+                    if (GetLegalMoves(new Position(r, c)).Any())
+                    {
+                        hasLegalMoves = true;
+                        break;
+                    }
+                }
+            }
+            if (hasLegalMoves) break;
+        }
+
+        GameState oldStatus = Status;
+
+        if (!hasLegalMoves)
+        {
+            if (IsKingInCheck(CurrentTurn))
+            {
+                Status = GameState.Checkmate;
+            }
+            else
+            {
+                Status = GameState.Stalemate;
+            }
+        }
+        else
+        {
+            if (IsKingInCheck(CurrentTurn))
+            {
+                Status = GameState.Check;
+            }
+            else
+            {
+                Status = GameState.Active;
+            }
+        }
+
+        if (Status != oldStatus)
+        {
+            GameStateChanged?.Invoke(this, new GameStateChangedEventArgs(Status));
+        }
     }
 
     /// <summary>
