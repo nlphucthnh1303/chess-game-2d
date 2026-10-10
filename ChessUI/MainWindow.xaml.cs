@@ -72,12 +72,38 @@ public partial class MainWindow : Window
     /// </summary>
     private void RenderBoard()
     {
-        // TODO: [Bước 1] Duyệt r từ 0..7 và c từ 0..7.
-        // TODO: [Bước 2] Lấy quân cờ tại ô (r, c) từ _gameManager.Board[r, c].
-        // TODO: [Bước 3] Nếu ô trống -> Gán Content của _squareButtons[r, c] = null.
-        // TODO: [Bước 4] Nếu ô có quân cờ -> Dùng ChessImageHelper.GetPieceImagePath() để nạp hình ảnh và hiển thị lên Content của Button.
-        // TODO: [Bước 5] Đặt lại màu nền gốc của ô cờ (xóa các màu highlight trước đó).
-        throw new NotImplementedException();
+        for (int r = 0; r < 8; r++)
+        {
+            for (int c = 0; c < 8; c++)
+            {
+                var piece = _gameManager.Board[r, c];
+
+                if (piece == null)
+                {
+                    if (_squareButtons[r, c] != null)
+                    {
+                        _squareButtons[r, c].Content = null;
+                    }
+                }
+                else
+                {
+                    if (_squareButtons[r, c] != null)
+                    {
+                        string imagePath = Helpers.ChessImageHelper.GetPieceImagePath(piece.Color, piece.Type);
+                        var image = new Image
+                        {
+                            Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute))
+                        };
+                        _squareButtons[r, c].Content = image;
+                    }
+                }
+
+                if (_squareButtons[r, c] != null)
+                {
+                    _squareButtons[r, c].ClearValue(Control.BackgroundProperty);
+                }
+            }
+        }
     }
 
     /// <summary>
