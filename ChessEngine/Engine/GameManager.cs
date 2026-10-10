@@ -125,13 +125,39 @@ public class GameManager
     /// </summary>
     private bool IsKingInCheckOnBoard(ChessColor kingColor, BoardManager targetBoard)
     {
-        // TODO: [Bước 1] Tìm vị trí Vua: Position kingPos = targetBoard.FindKingPosition(kingColor).
-        // TODO: [Bước 2] Xác định màu đối phương: ChessColor enemyColor = kingColor == ChessColor.White ? ChessColor.Black : ChessColor.White.
-        // TODO: [Bước 3] Duyệt qua tất cả ô trên targetBoard:
-        //       - Nếu ô chứa quân của enemyColor -> Lấy piece.GetPossibleMoves(enemyPos, targetBoard).
-        //       - Nếu có bất kỳ nước đi nào có EndPosition == kingPos -> Trả về true (Vua bị chiếu).
-        // TODO: [Bước 4] Trả về false nếu không quân đối phương nào đe dọa Vua.
-        throw new NotImplementedException();
+        // [Bước 1] Tìm vị trí Vua: Position kingPos = targetBoard.FindKingPosition(kingColor).
+        Position kingPos = targetBoard.FindKingPosition(kingColor);
+
+        // [Bước 2] Xác định màu đối phương: ChessColor enemyColor = kingColor == ChessColor.White ? ChessColor.Black : ChessColor.White.
+        ChessColor enemyColor = kingColor == ChessColor.White ? ChessColor.Black : ChessColor.White;
+
+        // [Bước 3] Duyệt qua tất cả ô trên targetBoard:
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                Position pos = new Position(row, col);
+                Piece? piece = targetBoard.GetPiece(pos);
+
+                // - Nếu ô chứa quân của enemyColor -> Lấy piece.GetPossibleMoves(enemyPos, targetBoard).
+                if (piece != null && piece.Color == enemyColor)
+                {
+                    IEnumerable<Move> possibleMoves = piece.GetPossibleMoves(pos, targetBoard);
+
+                    // - Nếu có bất kỳ nước đi nào có EndPosition == kingPos -> Trả về true (Vua bị chiếu).
+                    foreach (Move move in possibleMoves)
+                    {
+                        if (move.EndPosition == kingPos)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // [Bước 4] Trả về false nếu không quân đối phương nào đe dọa Vua.
+        return false;
     }
 
     /// <summary>
