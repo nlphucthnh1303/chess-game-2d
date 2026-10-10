@@ -106,9 +106,16 @@ public partial class MainWindow : Window
     /// </summary>
     private void HighlightLegalMoves()
     {
-        // TODO: [Bước 1] Đổi màu nền của Button tại ô _selectedPosition (Ví dụ: màu Vàng/Xanh lá mạ).
-        // TODO: [Bước 2] Với mỗi move trong _activeLegalMoves -> Đổi màu nền ô EndPosition (Ví dụ: Chấm tròn gợi ý hoặc viền xanh).
-        throw new NotImplementedException();
+        if (_selectedPosition.HasValue)
+        {
+            var pos = _selectedPosition.Value;
+            _squareButtons[pos.Row, pos.Column].Background = Brushes.YellowGreen;
+        }
+
+        foreach (var move in _activeLegalMoves)
+        {
+            _squareButtons[move.EndPosition.Row, move.EndPosition.Column].Background = Brushes.LightSkyBlue;
+        }
     }
 
     /// <summary>
