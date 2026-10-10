@@ -138,10 +138,9 @@ public partial class MainWindow : Window
     /// </summary>
     private void BtnNewGame_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: [Bước 1] Gọi _gameManager.StartNewGame().
-        // TODO: [Bước 2] Gọi LstMoveHistory.Items.Clear().
-        // TODO: [Bước 3] Gọi RenderBoard().
-        throw new NotImplementedException();
+        _gameManager.StartNewGame();
+        LstMoveHistory.Items.Clear();
+        RenderBoard();
     }
 
     /// <summary>
