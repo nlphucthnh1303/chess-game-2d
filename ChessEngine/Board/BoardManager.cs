@@ -60,9 +60,8 @@ public class BoardManager
     /// <returns>Đối tượng Piece hoặc null nếu ô trống</returns>
     public Piece? GetPiece(Position pos)
     {
-        // TODO: [Bước 1] Kiểm tra IsInside(pos). Nếu không hợp lệ, ném ngoại lệ ArgumentOutOfRangeException hoặc trả về null.
-        // TODO: [Bước 2] Trả về _pieces[pos.Row, pos.Column].
-        throw new NotImplementedException();
+        if (!IsInside(pos)) return null;
+        return _pieces[pos.Row, pos.Column];
     }
 
     /// <summary>
@@ -82,8 +81,7 @@ public class BoardManager
     /// </summary>
     public bool IsInside(Position pos)
     {
-        // TODO: [Bước 1] Trả về pos.Row >= 0 && pos.Row < 8 && pos.Column >= 0 && pos.Column < 8.
-        throw new NotImplementedException();
+        return pos.Row >= 0 && pos.Row < 8 && pos.Column >= 0 && pos.Column < 8;
     }
 
     /// <summary>
@@ -91,8 +89,7 @@ public class BoardManager
     /// </summary>
     public bool IsEmpty(Position pos)
     {
-        // TODO: [Bước 1] Trả về IsInside(pos) && GetPiece(pos) == null.
-        throw new NotImplementedException();
+        return IsInside(pos) && GetPiece(pos) == null;
     }
 
     /// <summary>

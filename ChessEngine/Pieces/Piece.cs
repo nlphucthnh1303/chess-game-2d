@@ -56,9 +56,8 @@ public abstract class Piece
     /// <returns>True nếu ô đích hợp lệ để đáp xuống</returns>
     protected virtual bool CanMoveTo(Position targetPos, BoardManager board)
     {
-        // TODO: [Bước 1] Kiểm tra targetPos có nằm trong bàn cờ không (board.IsInside(targetPos)). Nếu không -> trả về false.
-        // TODO: [Bước 2] Lấy quân cờ tại ô đích: Piece? targetPiece = board.GetPiece(targetPos).
-        // TODO: [Bước 3] Trả về true nếu ô đích trống (targetPiece == null) HOẶC ô đích chứa quân cờ của đối phương (targetPiece.Color != Color).
-        throw new NotImplementedException();
+        if (!board.IsInside(targetPos)) return false;
+        Piece? targetPiece = board.GetPiece(targetPos);
+        return targetPiece == null || targetPiece.Color != Color;
     }
 }
