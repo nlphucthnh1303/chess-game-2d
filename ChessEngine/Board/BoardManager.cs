@@ -72,9 +72,12 @@ public class BoardManager
     /// <param name="piece">Đối tượng quân cờ (hoặc null để xóa quân)</param>
     public void SetPiece(Position pos, Piece? piece)
     {
-        // TODO: [Bước 1] Kiểm tra IsInside(pos).
-        // TODO: [Bước 2] Gán _pieces[pos.Row, pos.Column] = piece.
-        throw new NotImplementedException();
+        if (!IsInside(pos))
+        {
+            throw new ArgumentOutOfRangeException(nameof(pos), "Vị trí nằm ngoài bàn cờ");
+        }
+
+        _pieces[pos.Row, pos.Column] = piece;
     }
 
     /// <summary>
@@ -82,8 +85,7 @@ public class BoardManager
     /// </summary>
     public bool IsInside(Position pos)
     {
-        // TODO: [Bước 1] Trả về pos.Row >= 0 && pos.Row < 8 && pos.Column >= 0 && pos.Column < 8.
-        throw new NotImplementedException();
+        return pos.Row >= 0 && pos.Row < 8 && pos.Column >= 0 && pos.Column < 8;
     }
 
     /// <summary>
