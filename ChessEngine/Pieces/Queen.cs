@@ -21,15 +21,52 @@ public class Queen : Piece
     /// </summary>
     public override IEnumerable<Move> GetPossibleMoves(Position currentPos, BoardManager board)
     {
-        // TODO: [Bước 1] Định nghĩa 8 hướng di chuyển (Ngang, Dọc và 4 đường Chéo).
-        // TODO: [Bước 2] Lặp tịnh tiến trên cả 8 hướng cho tới khi bị chắn hoặc ra khỏi bàn cờ.
-        // TODO: [Bước 3] Thu thập danh sách các ô có thể đi/ăn quân và trả về.
-        throw new NotImplementedException();
+        var moves = new List<Move>();
+
+        // Định nghĩa 8 hướng di chuyển (Ngang, Dọc và 4 đường Chéo).
+        (int deltaRow, int deltaCol)[] directions = {
+            (-1, 0), (1, 0), (0, -1), (0, 1),
+            (-1, -1), (-1, 1), (1, -1), (1, 1)
+        };
+
+        foreach (var dir in directions)
+        {
+            var targetPos = currentPos + dir;
+
+            // Lặp tịnh tiến trên mỗi hướng
+            while (board.IsInside(targetPos))
+            {
+                var targetPiece = board.GetPiece(targetPos);
+
+                if (targetPiece == null)
+                {
+                    // Ô trống, có thể đi tiếp
+                    moves.Add(new Move(currentPos, targetPos));
+                }
+                else
+                {
+                    // Đụng quân cờ
+                    if (targetPiece.Color != this.Color)
+                    {
+                        // Quân đối phương -> Ăn quân và dừng lại hướng này
+                        moves.Add(new Move(currentPos, targetPos));
+                    }
+                    // Bất kể quân phe nào, cũng bị chắn, không tịnh tiến thêm được nữa
+                    break;
+                }
+
+                targetPos = targetPos + dir;
+            }
+        }
+
+        return moves;
     }
 
     public override Piece Copy()
     {
-        // TODO: Tạo Queen mới cùng màu và copy HasMoved.
-        throw new NotImplementedException();
+        return new Queen(Color)
+        {
+            HasMoved = this.HasMoved
+        };
     }
 }
