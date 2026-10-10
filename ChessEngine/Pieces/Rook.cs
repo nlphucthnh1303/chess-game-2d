@@ -21,18 +21,41 @@ public class Rook : Piece
     /// </summary>
     public override IEnumerable<Move> GetPossibleMoves(Position currentPos, BoardManager board)
     {
-        // TODO: [Bước 1] Định nghĩa 4 hướng thẳng: (-1, 0), (1, 0), (0, -1), (0, 1).
-        // TODO: [Bước 2] Với mỗi hướng, tịnh tiến từng ô cho tới khi ra ngoài bàn cờ hoặc vướng quân cờ khác.
-        //       - Ô trống -> Thêm Move, tiếp tục.
-        //       - Quân đối phương -> Thêm Move ăn quân, dừng lại.
-        //       - Quân phe mình -> Dừng lại.
-        // TODO: [Bước 3] Trả về tất cả các nước đi tìm được.
-        throw new NotImplementedException();
+        var moves = new List<Move>();
+        var directions = new (int deltaRow, int deltaCol)[]
+        {
+            (-1, 0), (1, 0), (0, -1), (0, 1)
+        };
+
+        foreach (var dir in directions)
+        {
+            Position nextPos = currentPos + dir;
+
+            while (board.IsInside(nextPos))
+            {
+                Piece? pieceAtNextPos = board.GetPiece(nextPos);
+
+                if (pieceAtNextPos == null)
+                {
+                    moves.Add(new Move(currentPos, nextPos));
+                    nextPos = nextPos + dir;
+                }
+                else
+                {
+                    if (pieceAtNextPos.Color != this.Color)
+                    {
+                        moves.Add(new Move(currentPos, nextPos));
+                    }
+                    break;
+                }
+            }
+        }
+
+        return moves;
     }
 
     public override Piece Copy()
     {
-        // TODO: Tạo Rook mới cùng màu và copy HasMoved.
-        throw new NotImplementedException();
+        return new Rook(this.Color) { HasMoved = this.HasMoved };
     }
 }
