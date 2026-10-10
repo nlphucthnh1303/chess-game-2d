@@ -38,9 +38,8 @@ public class Pawn : Piece
 
     public override Piece Copy()
     {
-        // TODO: [Bước 1] Tạo Pawn mới với cùng Color: var copy = new Pawn(Color).
-        // TODO: [Bước 2] Gán copy.HasMoved = HasMoved.
-        // TODO: [Bước 3] Trả về copy.
-        throw new NotImplementedException();
+        var copy = new Pawn(Color);
+        copy.HasMoved = HasMoved;
+        return copy;
     }
 }
