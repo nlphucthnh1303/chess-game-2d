@@ -128,9 +128,28 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnGameStateChanged(object? sender, GameStateChangedEventArgs e)
     {
-        // TODO: [Bước 1] Cập nhật TxtGameState.Text hiển thị trạng thái mới.
-        // TODO: [Bước 2] Nếu state == Checkmate hoặc Stalemate -> Hiển thị MessageBox thông báo người thắng/kết quả ván cờ.
-        throw new NotImplementedException();
+        // [Bước 1] Cập nhật TxtGameState.Text hiển thị trạng thái mới.
+        TxtGameState.Text = e.NewState switch
+        {
+            GameState.Active => "Đang diễn ra",
+            GameState.Check => "Đang bị chiếu",
+            GameState.Checkmate => "Chiếu bí",
+            GameState.Stalemate => "Hòa bế tắc",
+            GameState.DrawByInsufficientMaterial => "Hòa (không đủ quân)",
+            GameState.DrawByRule => "Hòa theo luật",
+            _ => "Không xác định"
+        };
+
+        // [Bước 2] Nếu state == Checkmate hoặc Stalemate -> Hiển thị MessageBox thông báo người thắng/kết quả ván cờ.
+        if (e.NewState == GameState.Checkmate)
+        {
+            string winner = _gameManager.CurrentTurn == ChessColor.White ? "Đen (Black)" : "Trắng (White)";
+            MessageBox.Show($"Chiếu bí! Người thắng: {winner}", "Kết thúc ván cờ", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        else if (e.NewState == GameState.Stalemate)
+        {
+            MessageBox.Show("Hòa bế tắc (Stalemate)!", "Kết thúc ván cờ", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     /// <summary>
