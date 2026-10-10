@@ -75,17 +75,26 @@ public class GameManager
     /// <returns>Tập hợp các Move hợp lệ</returns>
     public IEnumerable<Move> GetLegalMoves(Position pos)
     {
-        // TODO: [Bước 1] Lấy quân cờ tại pos: Piece? piece = Board.GetPiece(pos).
-        // TODO: [Bước 2] Nếu piece == null HOẶC piece.Color != CurrentTurn -> Trả về danh sách rỗng (Enumerable.Empty<Move>()).
-        // TODO: [Bước 3] Lấy danh sách nước đi khả thi ban đầu: IEnumerable<Move> candidateMoves = piece.GetPossibleMoves(pos, Board).
-        // TODO: [Bước 4] Khởi tạo danh sách kết quả validMoves.
-        // TODO: [Bước 5] Với mỗi move trong candidateMoves:
-        //       - Tạo bản sao bàn cờ thử nghiệm: BoardManager testBoard = Board.Clone().
-        //       - Thực thi thử move trên testBoard: testBoard.ApplyMove(move).
-        //       - Kiểm tra Vua phe mình có bị chiếu trên testBoard hay không: IsKingInCheckOnBoard(CurrentTurn, testBoard).
-        //       - Nếu KHÔNG bị chiếu -> Thêm move vào validMoves.
-        // TODO: [Bước 6] Trả về validMoves.
-        throw new NotImplementedException();
+        Piece? piece = Board.GetPiece(pos);
+        if (piece == null || piece.Color != CurrentTurn)
+        {
+            return Enumerable.Empty<Move>();
+        }
+
+        IEnumerable<Move> candidateMoves = piece.GetPossibleMoves(pos, Board);
+        List<Move> validMoves = new List<Move>();
+
+        foreach (Move move in candidateMoves)
+        {
+            BoardManager testBoard = Board.Clone();
+            testBoard.ApplyMove(move);
+            if (!IsKingInCheckOnBoard(CurrentTurn, testBoard))
+            {
+                validMoves.Add(move);
+            }
+        }
+
+        return validMoves;
     }
 
     /// <summary>
