@@ -27,32 +27,33 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Thinh\\.nuget\\packages\\": {}
+    "/home/jules/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "S:\\Study\\Code\\Net\\chess-game-2d\\ChessUI\\ChessUI.csproj",
+      "projectUniqueName": "/app/ChessUI/ChessUI.csproj",
       "projectName": "ChessUI",
-      "projectPath": "S:\\Study\\Code\\Net\\chess-game-2d\\ChessUI\\ChessUI.csproj",
-      "packagesPath": "C:\\Users\\Thinh\\.nuget\\packages\\",
-      "outputPath": "S:\\Study\\Code\\Net\\chess-game-2d\\ChessUI\\obj\\",
+      "projectPath": "/app/ChessUI/ChessUI.csproj",
+      "packagesPath": "/home/jules/.nuget/packages/",
+      "outputPath": "/app/ChessUI/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Thinh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/jules/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0-windows"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
+        "/usr/lib/dotnet/library-packs": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "projectReferences": {
-            "S:\\Study\\Code\\Net\\chess-game-2d\\ChessEngine\\ChessEngine.csproj": {
-              "projectPath": "S:\\Study\\Code\\Net\\chess-game-2d\\ChessEngine\\ChessEngine.csproj"
+            "/app/ChessEngine/ChessEngine.csproj": {
+              "projectPath": "/app/ChessEngine/ChessEngine.csproj"
             }
           }
         }
@@ -66,7 +67,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -82,6 +84,16 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Host.linux-x64",
+            "version": "[8.0.24, 8.0.24]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.24, 8.0.24]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
@@ -90,7 +102,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
