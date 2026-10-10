@@ -156,8 +156,7 @@ public class GameManager
     /// </summary>
     public Move? GetLastMove()
     {
-        // TODO: Trả về phần tử cuối trong MoveHistory hoặc null nếu chưa có nước đi nào.
-        throw new NotImplementedException();
+        return MoveHistory.Count > 0 ? MoveHistory[^1] : null;
     }
 }
 
