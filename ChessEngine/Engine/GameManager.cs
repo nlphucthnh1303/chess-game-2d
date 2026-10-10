@@ -117,7 +117,7 @@ public class GameManager
     public bool IsKingInCheck(ChessColor kingColor)
     {
         // TODO: [Bước 1] Gọi IsKingInCheckOnBoard(kingColor, Board).
-        throw new NotImplementedException();
+        return IsKingInCheckOnBoard(kingColor, Board);
     }
 
     /// <summary>

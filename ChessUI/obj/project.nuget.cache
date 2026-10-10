@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "2TgYwzSKQVk=",
+  "dgSpecHash": "C3QXrueeNzU=",
   "success": true,
-  "projectFilePath": "S:\\Study\\Code\\Net\\chess-game-2d\\ChessUI\\ChessUI.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/app/ChessUI/ChessUI.csproj",
+  "expectedPackageFiles": [
+    "/home/jules/.nuget/packages/microsoft.windowsdesktop.app.ref/8.0.24/microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
+    "/home/jules/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.24/microsoft.netcore.app.host.linux-x64.8.0.24.nupkg.sha512"
+  ],
   "logs": []
 }
