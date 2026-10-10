@@ -75,17 +75,40 @@ public class GameManager
     /// <returns>Tập hợp các Move hợp lệ</returns>
     public IEnumerable<Move> GetLegalMoves(Position pos)
     {
-        // TODO: [Bước 1] Lấy quân cờ tại pos: Piece? piece = Board.GetPiece(pos).
-        // TODO: [Bước 2] Nếu piece == null HOẶC piece.Color != CurrentTurn -> Trả về danh sách rỗng (Enumerable.Empty<Move>()).
-        // TODO: [Bước 3] Lấy danh sách nước đi khả thi ban đầu: IEnumerable<Move> candidateMoves = piece.GetPossibleMoves(pos, Board).
-        // TODO: [Bước 4] Khởi tạo danh sách kết quả validMoves.
-        // TODO: [Bước 5] Với mỗi move trong candidateMoves:
-        //       - Tạo bản sao bàn cờ thử nghiệm: BoardManager testBoard = Board.Clone().
-        //       - Thực thi thử move trên testBoard: testBoard.ApplyMove(move).
-        //       - Kiểm tra Vua phe mình có bị chiếu trên testBoard hay không: IsKingInCheckOnBoard(CurrentTurn, testBoard).
-        //       - Nếu KHÔNG bị chiếu -> Thêm move vào validMoves.
-        // TODO: [Bước 6] Trả về validMoves.
-        throw new NotImplementedException();
+        // [Bước 1] Lấy quân cờ tại pos: Piece? piece = Board.GetPiece(pos).
+        Piece? piece = Board.GetPiece(pos);
+
+        // [Bước 2] Nếu piece == null HOẶC piece.Color != CurrentTurn -> Trả về danh sách rỗng (Enumerable.Empty<Move>()).
+        if (piece == null || piece.Color != CurrentTurn)
+        {
+            return Enumerable.Empty<Move>();
+        }
+
+        // [Bước 3] Lấy danh sách nước đi khả thi ban đầu: IEnumerable<Move> candidateMoves = piece.GetPossibleMoves(pos, Board).
+        IEnumerable<Move> candidateMoves = piece.GetPossibleMoves(pos, Board);
+
+        // [Bước 4] Khởi tạo danh sách kết quả validMoves.
+        List<Move> validMoves = new List<Move>();
+
+        // [Bước 5] Với mỗi move trong candidateMoves:
+        foreach (Move move in candidateMoves)
+        {
+            // - Tạo bản sao bàn cờ thử nghiệm: BoardManager testBoard = Board.Clone().
+            BoardManager testBoard = Board.Clone();
+
+            // - Thực thi thử move trên testBoard: testBoard.ApplyMove(move).
+            testBoard.ApplyMove(move);
+
+            // - Kiểm tra Vua phe mình có bị chiếu trên testBoard hay không: IsKingInCheckOnBoard(CurrentTurn, testBoard).
+            // - Nếu KHÔNG bị chiếu -> Thêm move vào validMoves.
+            if (!IsKingInCheckOnBoard(CurrentTurn, testBoard))
+            {
+                validMoves.Add(move);
+            }
+        }
+
+        // [Bước 6] Trả về validMoves.
+        return validMoves;
     }
 
     /// <summary>
