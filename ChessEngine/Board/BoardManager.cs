@@ -15,6 +15,9 @@ public class BoardManager
     /// </summary>
     private readonly Piece?[,] _pieces = new Piece?[8, 8];
 
+    public Position? WhiteKingPosition { get; private set; }
+    public Position? BlackKingPosition { get; private set; }
+
     /// <summary>
     /// Indexer cho phép truy cập quân cờ nhanh theo chỉ số hàng và cột [row, col].
     /// </summary>
@@ -72,9 +75,22 @@ public class BoardManager
     /// <param name="piece">Đối tượng quân cờ (hoặc null để xóa quân)</param>
     public void SetPiece(Position pos, Piece? piece)
     {
-        // TODO: [Bước 1] Kiểm tra IsInside(pos).
-        // TODO: [Bước 2] Gán _pieces[pos.Row, pos.Column] = piece.
-        throw new NotImplementedException();
+        if (!IsInside(pos)) throw new ArgumentOutOfRangeException(nameof(pos));
+
+        var oldPiece = _pieces[pos.Row, pos.Column];
+        if (oldPiece != null && oldPiece.Type == PieceType.King)
+        {
+            if (oldPiece.Color == ChessColor.White && WhiteKingPosition == pos) WhiteKingPosition = null;
+            else if (oldPiece.Color == ChessColor.Black && BlackKingPosition == pos) BlackKingPosition = null;
+        }
+
+        if (piece != null && piece.Type == PieceType.King)
+        {
+            if (piece.Color == ChessColor.White) WhiteKingPosition = pos;
+            else BlackKingPosition = pos;
+        }
+
+        _pieces[pos.Row, pos.Column] = piece;
     }
 
     /// <summary>
@@ -82,8 +98,7 @@ public class BoardManager
     /// </summary>
     public bool IsInside(Position pos)
     {
-        // TODO: [Bước 1] Trả về pos.Row >= 0 && pos.Row < 8 && pos.Column >= 0 && pos.Column < 8.
-        throw new NotImplementedException();
+        return pos.Row >= 0 && pos.Row < 8 && pos.Column >= 0 && pos.Column < 8;
     }
 
     /// <summary>
@@ -129,11 +144,9 @@ public class BoardManager
     /// <returns>Tọa độ Position của Vua</returns>
     public Position FindKingPosition(ChessColor color)
     {
-        // TODO: [Bước 1] Duyệt r từ 0..7 và c từ 0..7.
-        // TODO: [Bước 2] Lấy piece = _pieces[r, c].
-        // TODO: [Bước 3] Nếu piece != null && piece.Type == PieceType.King && piece.Color == color -> Trả về new Position(r, c).
-        // TODO: [Bước 4] Nếu không tìm thấy, ném ra InvalidOperationException("Không tìm thấy Vua trên bàn cờ").
-        throw new NotImplementedException();
+        var pos = color == ChessColor.White ? WhiteKingPosition : BlackKingPosition;
+        if (pos.HasValue) return pos.Value;
+        throw new InvalidOperationException("Không tìm thấy Vua trên bàn cờ");
     }
 
     /// <summary>
