@@ -117,10 +117,9 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnMoveExecuted(object? sender, MoveExecutedEventArgs e)
     {
-        // TODO: [Bước 1] Gọi RenderBoard() để vẽ lại vị trí các quân cờ mới.
-        // TODO: [Bước 2] Thêm chuỗi mô tả e.ExecutedMove.ToString() vào ListBox LstMoveHistory.
-        // TODO: [Bước 3] Cập nhật TxtCurrentTurn.Text = _gameManager.CurrentTurn == White ? "Trắng (White)" : "Đen (Black)".
-        throw new NotImplementedException();
+        RenderBoard();
+        LstMoveHistory.Items.Add(e.ExecutedMove.ToString());
+        TxtCurrentTurn.Text = _gameManager.CurrentTurn == ChessColor.White ? "Trắng (White)" : "Đen (Black)";
     }
 
     /// <summary>
