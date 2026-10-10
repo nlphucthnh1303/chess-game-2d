@@ -86,19 +86,44 @@ public partial class MainWindow : Window
     /// </summary>
     private void SquareButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: [Bước 1] Lấy vị trí ô cờ click (clickedPos) từ Tag của Button gửi tới.
-        // TODO: [Bước 2] Nếu chưa chọn ô nào (_selectedPosition == null):
-        //       - Lấy quân cờ tại clickedPos. Nếu là quân thuộc lượt đi hiện tại (_gameManager.CurrentTurn):
-        //           + Gán _selectedPosition = clickedPos.
-        //           + Lấy danh sách nước đi hợp lệ: _activeLegalMoves = _gameManager.GetLegalMoves(clickedPos).ToList().
-        //           + Highlight ô đang chọn và các ô đích khả thi (HighlightLegalMoves()).
-        // TODO: [Bước 3] Nếu ĐÃ chọn ô trước đó (_selectedPosition != null):
-        //       - Tìm xem clickedPos có nằm trong danh sách _activeLegalMoves hay không.
-        //       - Nếu CÓ -> Thực hiện nước đi: _gameManager.MakeMove(targetMove), sau đó reset _selectedPosition = null.
-        //       - Nếu KHÔNG -> Kiểm tra xem clickedPos có phải là một quân cờ khác phe mình không.
-        //           + Nếu đúng -> Chuyển ô chọn mới sang clickedPos và highlight lại.
-        //           + Nếu sai -> Bỏ chọn (_selectedPosition = null) và reset màu bàn cờ.
-        throw new NotImplementedException();
+        if (sender is Button button && button.Tag is Position clickedPos)
+        {
+            if (_selectedPosition == null)
+            {
+                var piece = _gameManager.Board.GetPiece(clickedPos);
+                if (piece != null && piece.Color == _gameManager.CurrentTurn)
+                {
+                    _selectedPosition = clickedPos;
+                    _activeLegalMoves = _gameManager.GetLegalMoves(clickedPos).ToList();
+                    HighlightLegalMoves();
+                }
+            }
+            else
+            {
+                var targetMove = _activeLegalMoves.FirstOrDefault(m => m.EndPosition == clickedPos);
+                if (targetMove != null)
+                {
+                    _gameManager.MakeMove(targetMove);
+                    _selectedPosition = null;
+                }
+                else
+                {
+                    var piece = _gameManager.Board.GetPiece(clickedPos);
+                    if (piece != null && piece.Color == _gameManager.CurrentTurn)
+                    {
+                        RenderBoard();
+                        _selectedPosition = clickedPos;
+                        _activeLegalMoves = _gameManager.GetLegalMoves(clickedPos).ToList();
+                        HighlightLegalMoves();
+                    }
+                    else
+                    {
+                        _selectedPosition = null;
+                        RenderBoard();
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>
