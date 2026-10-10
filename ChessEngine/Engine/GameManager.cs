@@ -60,11 +60,18 @@ public class GameManager
     /// </summary>
     public void StartNewGame()
     {
-        // TODO: [Bước 1] Gọi Board.ResetToStandardStartingPosition() để sắp xếp 32 quân cờ.
-        // TODO: [Bước 2] Thiết lập CurrentTurn = ChessColor.White.
-        // TODO: [Bước 3] Thiết lập Status = GameState.Active.
-        // TODO: [Bước 4] Xóa sạch MoveHistory và đặt EnPassantTarget = null.
-        throw new NotImplementedException();
+        // [Bước 1] Gọi Board.ResetToStandardStartingPosition() để sắp xếp 32 quân cờ.
+        Board.ResetToStandardStartingPosition();
+
+        // [Bước 2] Thiết lập CurrentTurn = ChessColor.White.
+        CurrentTurn = ChessColor.White;
+
+        // [Bước 3] Thiết lập Status = GameState.Active.
+        Status = GameState.Active;
+
+        // [Bước 4] Xóa sạch MoveHistory và đặt EnPassantTarget = null.
+        MoveHistory.Clear();
+        EnPassantTarget = null;
     }
 
     /// <summary>
