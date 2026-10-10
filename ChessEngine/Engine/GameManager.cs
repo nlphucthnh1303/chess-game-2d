@@ -141,11 +141,12 @@ public class GameManager
     {
         // TODO: [Bước 1] Kiểm tra xem phe hiện tại (CurrentTurn) có còn NƯỚC ĐI HỢP LỆ nào không:
         //       - Duyệt tất cả các quân cờ của CurrentTurn, nếu có ít nhất 1 quân có GetLegalMoves().Any() -> Còn nước đi.
+        // TODO: [Bước 1.5] Lấy trạng thái chiếu cờ: bool isCheck = IsKingInCheck(CurrentTurn);
         // TODO: [Bước 2] Nếu KHÔNG còn nước đi hợp lệ nào:
-        //       - Nếu IsKingInCheck(CurrentTurn) == true -> Status = GameState.Checkmate (Chiếu bí - Thua).
-        //       - Nếu IsKingInCheck(CurrentTurn) == false -> Status = GameState.Stalemate (Hòa bế tắc).
+        //       - Nếu isCheck == true -> Status = GameState.Checkmate (Chiếu bí - Thua).
+        //       - Nếu isCheck == false -> Status = GameState.Stalemate (Hòa bế tắc).
         // TODO: [Bước 3] Nếu CÒN nước đi hợp lệ:
-        //       - Nếu IsKingInCheck(CurrentTurn) == true -> Status = GameState.Check (Đang bị chiếu).
+        //       - Nếu isCheck == true -> Status = GameState.Check (Đang bị chiếu).
         //       - Ngược lại -> Status = GameState.Active.
         // TODO: [Bước 4] Nếu Status thay đổi, kích hoạt sự kiện GameStateChanged?.Invoke(this, new GameStateChangedEventArgs(Status)).
         throw new NotImplementedException();
