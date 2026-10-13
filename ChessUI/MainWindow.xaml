@@ -56,19 +56,19 @@
 
                 <!-- Danh sách lịch sử nước đi -->
                 <GroupBox Grid.Row="2" Header="Lịch sử nước đi" Foreground="#EDF2F4" FontSize="14" Margin="0,0,0,15">
-                    <ListBox Name="LstMoveHistory" Background="#1E1E24" Foreground="#F72585" BorderThickness="0" Margin="5"/>
+                    <ListBox Name="LstMoveHistory" AutomationProperties.Name="Danh sách lịch sử nước đi" Background="#1E1E24" Foreground="#F72585" BorderThickness="0" Margin="5"/>
                 </GroupBox>
 
                 <!-- Nút điều khiển -->
                 <StackPanel Grid.Row="3">
-                    <Button Name="BtnNewGame" Content="🎮 Ván đấu mới" Height="40" Background="#4361EE" Foreground="White" FontSize="15" FontWeight="Bold" Cursor="Hand" Click="BtnNewGame_Click" Margin="0,0,0,8">
+                    <Button Name="BtnNewGame" AutomationProperties.Name="Bắt đầu ván đấu mới" ToolTip="Bắt đầu ván đấu mới" Content="🎮 Ván đấu mới" Height="40" Background="#4361EE" Foreground="White" FontSize="15" FontWeight="Bold" Cursor="Hand" Click="BtnNewGame_Click" Margin="0,0,0,8">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button Name="BtnUndoMove" Content="↩️ Hoàn nước đi (Undo)" Height="35" Background="#3A0CA3" Foreground="White" FontSize="14" FontWeight="SemiBold" Cursor="Hand" Click="BtnUndoMove_Click">
+                    <Button Name="BtnUndoMove" AutomationProperties.Name="Hoàn lại nước đi vừa rồi" ToolTip="Hoàn lại nước đi vừa rồi" Content="↩️ Hoàn nước đi (Undo)" Height="35" Background="#3A0CA3" Foreground="White" FontSize="14" FontWeight="SemiBold" Cursor="Hand" Click="BtnUndoMove_Click">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>

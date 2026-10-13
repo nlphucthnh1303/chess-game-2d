@@ -1,0 +1,3 @@
+## 2026-10-13 - WPF Accessibility with Emojis
+**Learning:** In WPF applications (like this `ChessUI` project), buttons often use emojis for visual appeal, but these can be poorly read or skipped by screen readers. Furthermore, the default text content inside a `ListBox` or a `Button` might not be sufficiently descriptive if it relies purely on visual cues or emojis.
+**Action:** Always add `AutomationProperties.Name` to interactive WPF elements that contain emojis or lack sufficient intrinsic text context. Additionally, provide `ToolTip` attributes to these elements to assist mouse users. Ensure these labels and tooltips are localized appropriately (e.g., in Vietnamese for this project).
