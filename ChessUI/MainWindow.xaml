@@ -61,14 +61,14 @@
 
                 <!-- Nút điều khiển -->
                 <StackPanel Grid.Row="3">
-                    <Button Name="BtnNewGame" Content="🎮 Ván đấu mới" Height="40" Background="#4361EE" Foreground="White" FontSize="15" FontWeight="Bold" Cursor="Hand" Click="BtnNewGame_Click" Margin="0,0,0,8">
+                    <Button Name="BtnNewGame" Content="🎮 Ván đấu mới" Height="40" Background="#4361EE" Foreground="White" FontSize="15" FontWeight="Bold" Cursor="Hand" Click="BtnNewGame_Click" Margin="0,0,0,8" AutomationProperties.Name="Bắt đầu ván đấu mới" ToolTip="Bắt đầu ván đấu mới">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button Name="BtnUndoMove" Content="↩️ Hoàn nước đi (Undo)" Height="35" Background="#3A0CA3" Foreground="White" FontSize="14" FontWeight="SemiBold" Cursor="Hand" Click="BtnUndoMove_Click">
+                    <Button Name="BtnUndoMove" Content="↩️ Hoàn nước đi (Undo)" Height="35" Background="#3A0CA3" Foreground="White" FontSize="14" FontWeight="SemiBold" Cursor="Hand" Click="BtnUndoMove_Click" AutomationProperties.Name="Hoàn lại nước đi vừa rồi" ToolTip="Hoàn lại nước đi vừa rồi">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>
