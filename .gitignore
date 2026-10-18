@@ -1,0 +1,5 @@
+
+# .NET generated build artifacts
+bin/
+obj/
+*.user
